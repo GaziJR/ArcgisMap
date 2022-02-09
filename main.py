@@ -25,8 +25,8 @@ class MainWindow(QMainWindow):
 		self.lat, self.lon = 39,32
 		self.lastLat, self.lastLon = 39,32 
 		self.droneYaw, self.dronePitch, self.droneYaw, self.elevation = 0,0,0,0
-		# threading.Thread(target=self.updateMarker, daemon = True).start()
-		# threading.Thread(target=self.connectDrone, daemon = True).start()
+		threading.Thread(target=self.updateMarker, daemon = True).start()
+		threading.Thread(target=self.connectDrone, daemon = True).start()
 		self.showMaximized()
 
 	def addHudMap(self, view):
