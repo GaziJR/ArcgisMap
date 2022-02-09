@@ -25,8 +25,8 @@ class MainWindow(QMainWindow):
 		self.lat, self.lon = 39,32
 		self.lastLat, self.lastLon = 39,32 
 		self.droneYaw, self.dronePitch, self.droneYaw, self.elevation = 0,0,0,0
-		threading.Thread(target=self.updateMarker, daemon = True).start()
-		threading.Thread(target=self.connectDrone, daemon = True).start()
+		# threading.Thread(target=self.updateMarker, daemon = True).start()
+		# threading.Thread(target=self.connectDrone, daemon = True).start()
 		self.showMaximized()
 
 	def addHudMap(self, view):
@@ -52,22 +52,23 @@ class MainWindow(QMainWindow):
 		time.sleep(3)
 		self.objectName.setProperty("elevation2",1000)
 		while True:
-			############ Smooth #############
-			# self.sayac += 1.2
-			# coord = geod.Direct(self.lastLat,self.lastLon, self.yaw, self.sayac)
-			# self.objectName.setProperty("lat2",coord['lat2'])
-			# self.objectName.setProperty("lon2",coord['lon2'])
-			#################################
+			try:
+				############ Smooth #############
+				# self.sayac += 1.2
+				# coord = geod.Direct(self.lastLat,self.lastLon, self.yaw, self.sayac)
+				# self.objectName.setProperty("lat2",coord['lat2'])
+				# self.objectName.setProperty("lon2",coord['lon2'])
+				#################################
 
-			self.objectName.setProperty("roll2", self.droneRoll)
-			self.objectName.setProperty("yaw2", self.droneYaw)
-			self.objectName.setProperty("pitch2",self.dronePitch)
-			self.objectName.setProperty("elevation2",self.elevation)
+				self.objectName.setProperty("roll2", self.droneRoll)
+				self.objectName.setProperty("yaw2", self.droneYaw)
+				self.objectName.setProperty("pitch2",self.dronePitch)
+				self.objectName.setProperty("elevation2",self.elevation)
 
-			self.objectName.setProperty("lat2",self.lat)
-			self.objectName.setProperty("lon2",self.lon)
-			
-
+				self.objectName.setProperty("lat2",self.lat)
+				self.objectName.setProperty("lon2",self.lon)
+			except:
+				pass
 			time.sleep(0.1)
 
 	def connectDrone(self):
@@ -81,7 +82,7 @@ class MainWindow(QMainWindow):
 			self.dronePitch = (drone.attitude.pitch*self.const)%360
 			self.elevation = drone.location.global_frame.alt
 			self.smooth(self.lat, self.lon)
-			time.sleep(0.5)
+			time.sleep(0.01)
 		
 	def smooth(self, lat, lon):
 		self.yaw = geod.Inverse(self.lastLat, self.lastLon, lat, lon)['azi1']
